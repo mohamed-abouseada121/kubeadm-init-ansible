@@ -1,10 +1,7 @@
-- name: restart memcached
+- name: Restart containerd
   systemd:
-    name: memcached
+    name: containerd
     state: restarted
-
-- name: restart firewalld
-  systemd:
-    name: firewalld
     enabled: yes
-    state: restarted
+- name: Reload sysctl
+  command: sysctl --system
