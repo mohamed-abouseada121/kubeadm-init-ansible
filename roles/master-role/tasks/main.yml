@@ -101,6 +101,12 @@
 # ==========================================================
 #  Containerd Config
 # ==========================================================
+- name: Ensure containerd directory exists
+  ansible.builtin.file:
+    path: /etc/containerd
+    state: directory
+    mode: '0755'
+
 - name: Generate default containerd config
   command: containerd config default
   register: containerd_default_config
