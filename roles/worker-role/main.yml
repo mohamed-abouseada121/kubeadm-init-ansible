@@ -1,0 +1,41 @@
+
+- name: turn off the swap memory
+  command: swapoff -a
+
+- name: Install epel and memcached
+  package:
+    name: 
+     - docker
+     - ca-certificates
+     - curl
+     - gnupg
+    state: present
+    update_cache: yes
+
+- name: test docker
+  command: docker run hello-world
+- name: Enable & start memcached
+  systemd:
+    name: memcached
+    enabled: yes
+    state: started
+
+
+- name: Copy memcached config
+  template:
+    src: memcached.j2
+    dest: /etc/sysconfig/memcached
+    owner: root
+    group: root
+    mode: '0644'
+  notify: restart memcached
+
+
+- name: open port 11211
+  ansible.posix.firewalld:
+    zone: public
+    port: 11211/tcp
+    permanent: true
+    state: enabled
+    immediate: yes
+  notify: restart firewalld
